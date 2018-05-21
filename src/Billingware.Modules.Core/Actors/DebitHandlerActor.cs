@@ -78,7 +78,7 @@ namespace Billingware.Modules.Core.Actors
             var creditTransactionCount = db.Transactions.AsNoTracking().LongCount(t => t.AccountNumber == request.AccountNumber && t.TransactionType == TransactionType.Debit);
 
 
-            var outcomeList = ConditionEvaluatorHelper.EvaluateConditionAndGetOutcomeIds(account, allConditions,
+            var outcomeList = ConditionEvaluatorHelper.EvaluateConditionAndGetOutcomeIds(account, allConditions,new ClientPayloadData("debit",request.Reference,request.Amount),
                 creditTransactionSum, creditTransactionCount, debitTransactionSum, debitTransactionCount,
                 allTransactionsCount);
 

@@ -10,7 +10,7 @@ namespace Billingware.Modules.Core.Actors
 {
     public class ConditionEvaluatorHelper
     {
-        public static List<int> EvaluateConditionAndGetOutcomeIds(Account account,List<Condition> conditions, decimal sumOfCreditTransactions = 0, long countOfCreditTransactions = 0, decimal sumOfDebitTransactions = 0, long countOfDebitTransactions = 0, long countOfTransactions = 0)
+        public static List<int> EvaluateConditionAndGetOutcomeIds(Account account,List<Condition> conditions,ClientPayloadData payloadData, decimal sumOfCreditTransactions = 0, long countOfCreditTransactions = 0, decimal sumOfDebitTransactions = 0, long countOfDebitTransactions = 0, long countOfTransactions = 0)
         {
             //Log(CommonLogLevel.Info, $"received request to {nameof(DoGetCount)} for {_tableName}", null);
             try
@@ -29,7 +29,7 @@ namespace Billingware.Modules.Core.Actors
                 {
                     var stepConditions = step.Where(c => c.Active);
 
-                    var exeResult = EvaluateConditions(account,stepConditions.ToList(),sumOfCreditTransactions,countOfCreditTransactions,sumOfDebitTransactions,countOfDebitTransactions,countOfTransactions);
+                    var exeResult = EvaluateConditions(account,stepConditions.ToList(),payloadData,sumOfCreditTransactions,countOfCreditTransactions,sumOfDebitTransactions,countOfDebitTransactions,countOfTransactions);
 
                     stepResults.Add(new Tuple<bool, int>(exeResult,
                         step.Key.Value));
@@ -49,7 +49,7 @@ namespace Billingware.Modules.Core.Actors
         }
 
 
-        private static bool EvaluateConditions(Account account,List<Condition> conditions, decimal sumOfCreditTransactions = 0, long countOfCreditTransactions = 0, decimal sumOfDebitTransactions = 0, long countOfDebitTransactions = 0, long countOfTransactions = 0)
+        private static bool EvaluateConditions(Account account,List<Condition> conditions, ClientPayloadData payloadData, decimal sumOfCreditTransactions = 0, long countOfCreditTransactions = 0, decimal sumOfDebitTransactions = 0, long countOfDebitTransactions = 0, long countOfTransactions = 0)
         {
             bool conditionResult;
 
@@ -90,7 +90,7 @@ namespace Billingware.Modules.Core.Actors
                         break;
                     case ComparatorKey.Custom:
                         //pick from Extras on Account object
-                        var v = GetCustomExpressionValue(account,
+                        var v = GetCustomExpressionValue(account,payloadData,
                             condition.KeyExpression);
 
                         
@@ -350,7 +350,7 @@ namespace Billingware.Modules.Core.Actors
         }
 
 
-        private static object GetCustomExpressionValue(Account account,
+        private static object GetCustomExpressionValue(Account account,ClientPayloadData payloadData,
             string keyExpression)
         {
 
@@ -367,13 +367,28 @@ namespace Billingware.Modules.Core.Actors
                 account.Balance,
                 account.Alias,
                 account.CreatedAt,
-                Extra = extraJson
+                Extra = extraJson,
+                Payload = payloadData
             }));
             
             var result = json.SelectToken(keyExpression);
 
             return result.ToObject<object>();
 
+        }
+    }
+
+    public class ClientPayloadData
+    {
+        public string TransactionType { get; }
+        public string Reference { get; }
+        public decimal Amount { get; }
+
+        public ClientPayloadData(string transactionType,string reference,decimal amount)
+        {
+            TransactionType = transactionType;
+            Reference = reference;
+            Amount = amount;
         }
     }
 }
