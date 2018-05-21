@@ -18,6 +18,12 @@ namespace Billingware.Modules.PublicApi.Controllers
     [RoutePrefix("debit"),Authorize]
     public class DebitController :ApiController
     {
+        /// <summary>
+        /// Handles requests to debit an account
+        /// </summary>
+        /// <param name="accountNumber">The account number. Must be valid and not null.</param>
+        /// <param name="model">The request model. Must be valid and not null</param>
+        /// <returns></returns>
         [Route("{accountNumber}"),HttpPost]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK,
@@ -25,6 +31,14 @@ namespace Billingware.Modules.PublicApi.Controllers
             Description = "If successful, an object containing information about the status of the intended request")]
         public async Task<IHttpActionResult> DebitAccount(string accountNumber,[FromBody]DebitAccountRequestModel model)
         {
+            if (model==null)
+            {
+                return Content(HttpStatusCode.BadRequest, new ApiResponse<string>
+                {
+                    Data = null,
+                    Message = "Request payload is null. Operation aborted."
+                });
+            }
             var response = await TopLevelActors.DebitHandlerActor.Ask<AccountDebitResponse>(
                 new RequestAccountDebit(accountNumber, model.Reference, model.Narration, model.Amount,
                     User.Identity.GetClientId(), new Dictionary<string, string>().ToImmutableDictionary()));
