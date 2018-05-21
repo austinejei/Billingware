@@ -3,7 +3,7 @@ Introduction
 
 This project aims to provide a distributed, highly scalable (open source)
 service that provides a developer/user intuitive tool to perform credit/debit
-actions on an entity.
+actions on an accounting entity.
 
 Features
 --------
