@@ -36,7 +36,7 @@ namespace Billingware.Modules.PublicApi.Middleware
                     var cachedToken = ConfigReader.Settings["Api.Clients.Keys"].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                     var hasKey = false;
-                    var clientId = 0;
+                    var clientId = string.Empty;
                     var apiKey = string.Empty;
                     foreach (var s in cachedToken)
                     {
@@ -56,7 +56,7 @@ namespace Billingware.Modules.PublicApi.Middleware
                                 break;
                             }
 
-                            clientId = int.Parse(keyParts[1]);
+                            clientId = keyParts[1];
                             apiKey = keyParts[0];
 
                             if (!apiKey.Equals(token))
@@ -125,7 +125,7 @@ namespace Billingware.Modules.PublicApi.Middleware
                         new Claim(ClaimTypes.DateOfBirth, DateTime.Now.ToString(),ClaimValueTypes.DateTime),
                         new Claim(ClaimTypes.AuthenticationMethod,authHeader.Scheme),
                         new Claim(ClaimTypes.Authentication,authHeader.Parameter),
-                        new Claim(ClaimTypes.Actor,clientId.ToString())
+                        new Claim(ClaimTypes.Actor,clientId)
                     };
 
 

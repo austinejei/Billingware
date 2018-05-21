@@ -1,4 +1,5 @@
-﻿using Billingware.Common.Actors;
+﻿using System;
+using Billingware.Common.Actors;
 using Billingware.Common.Actors.Messages;
 
 namespace Billingware.Modules.Core.Actors
@@ -14,6 +15,11 @@ namespace Billingware.Modules.Core.Actors
         {
             Log(CommonLogLevel.Debug, $"received request to debit {request.AccountNumber} with {request.Amount}", null,
                 null);
+
+            var ticket = Guid.NewGuid().ToString("N");
+            Sender.Tell(
+                new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
+                    decimal.Zero, new CommonStatusResponse(message:"Successful")), Self);
         }
     }
 }
