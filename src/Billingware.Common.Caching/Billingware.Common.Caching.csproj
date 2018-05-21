@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9F4EFA88-CF74-445D-A9EA-42DA7B4CE0E1}</ProjectGuid>
+    <ProjectGuid>{5794A7AA-1B32-4585-A146-B89D3D2057DC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Billingware.Models</RootNamespace>
-    <AssemblyName>Billingware.Models</AssemblyName>
+    <RootNamespace>Billingware.Common.Caching</RootNamespace>
+    <AssemblyName>Billingware.Common.Caching</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -36,17 +36,14 @@
     <Reference Include="Apache.Ignite.Core, Version=2.4.0.27085, Culture=neutral, PublicKeyToken=a487a7ff0b2aaa4a, processorArchitecture=MSIL">
       <HintPath>..\packages\Apache.Ignite.2.4.0\lib\net40\Apache.Ignite.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Apache.Ignite.EntityFramework, Version=2.4.0.27085, Culture=neutral, PublicKeyToken=a487a7ff0b2aaa4a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Apache.Ignite.EntityFramework.2.4.0\lib\net40\Apache.Ignite.EntityFramework.dll</HintPath>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.7.1\lib\net46\Serilog.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="Serilog.Settings.AppSettings, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Settings.AppSettings.2.1.2\lib\net45\Serilog.Settings.AppSettings.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,38 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caching\CustomCachingPolicy.cs" />
-    <Compile Include="Caching\Efl2CustomCacheConfiguration.cs" />
-    <Compile Include="Core\Account.cs" />
-    <Compile Include="BillingwareDataContext.cs" />
-    <Compile Include="Core\Condition.cs" />
-    <Compile Include="Core\ConditionOutcome.cs" />
-    <Compile Include="Migrations\201805192324509_Initial.cs" />
-    <Compile Include="Migrations\201805192324509_Initial.Designer.cs">
-      <DependentUpon>201805192324509_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="CustomIgniteSerilogLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Billingware.Common.Caching\Billingware.Common.Caching.csproj">
-      <Project>{5794A7AA-1B32-4585-A146-B89D3D2057DC}</Project>
-      <Name>Billingware.Common.Caching</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Billingware.Common.Logging\Billingware.Common.Logging.csproj">
-      <Project>{F6AEAE65-4F16-418E-96DF-530E7B332A89}</Project>
-      <Name>Billingware.Common.Logging</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201805192324509_Initial.resx">
-      <DependentUpon>201805192324509_Initial.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

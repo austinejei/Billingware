@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Billingware.Common.Logging;
+using Billingware.Models.Caching;
 using Billingware.Models.Core;
 
 namespace Billingware.Models
 {
+    [DbConfigurationType(typeof(Efl2CustomCacheConfiguration))]
     public class BillingwareDataContext: DbContext
     {
         public BillingwareDataContext() : base("DefaultConnection")

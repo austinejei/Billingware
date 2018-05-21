@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billingware.Modules.PublicA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billingware.Common.Api", "Billingware.Common.Api\Billingware.Common.Api.csproj", "{37FA252D-DB47-492A-8AEC-17C05AE650A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billingware.Common.Caching", "Billingware.Common.Caching\Billingware.Common.Caching.csproj", "{5794A7AA-1B32-4585-A146-B89D3D2057DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{37FA252D-DB47-492A-8AEC-17C05AE650A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37FA252D-DB47-492A-8AEC-17C05AE650A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37FA252D-DB47-492A-8AEC-17C05AE650A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5794A7AA-1B32-4585-A146-B89D3D2057DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5794A7AA-1B32-4585-A146-B89D3D2057DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5794A7AA-1B32-4585-A146-B89D3D2057DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5794A7AA-1B32-4585-A146-B89D3D2057DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +118,7 @@ Global
 		{06A2B4F2-F8F7-412E-AF5E-7E2FE141B32B} = {E7D74DB4-227F-4F3F-AAE3-06B0AA3F2B32}
 		{BA963722-047A-4B6E-9AA5-1E35801A0158} = {6CA1374A-72E9-4B61-B8D2-53342CE666EE}
 		{37FA252D-DB47-492A-8AEC-17C05AE650A3} = {E7D74DB4-227F-4F3F-AAE3-06B0AA3F2B32}
+		{5794A7AA-1B32-4585-A146-B89D3D2057DC} = {E7D74DB4-227F-4F3F-AAE3-06B0AA3F2B32}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8DA1D2DB-3006-40B1-80D8-D80C639DB19E}
