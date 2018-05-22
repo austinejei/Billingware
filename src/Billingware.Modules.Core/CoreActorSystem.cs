@@ -9,6 +9,7 @@ using Akka.Routing;
 using Billingware.Common.Actors;
 using Billingware.Common.Di;
 using Billingware.Modules.Core.Actors;
+using Billingware.Modules.Core.Events;
 
 namespace Billingware.Modules.Core
 {
@@ -58,6 +59,17 @@ namespace Billingware.Modules.Core
                     .WithSupervisorStrategy(GetDefaultSupervisorStrategy)
                     .WithRouter(FromConfig.Instance),
                 nameof(DebitRequestActor));
+
+            TopLevelActors.AccountingActor = _actorSystem.ActorOf(_actorSystem.DI()
+                    .Props<AccountingActor>()
+                    .WithSupervisorStrategy(GetDefaultSupervisorStrategy)
+                    .WithRouter(FromConfig.Instance),
+                nameof(AccountingActor));
+
+
+
+            _actorSystem.EventStream.Subscribe(TopLevelActors.AccountingActor, typeof(DebitAccount));
+            _actorSystem.EventStream.Subscribe(TopLevelActors.AccountingActor, typeof(PersistTransaction));
         }
 
         /// <summary>

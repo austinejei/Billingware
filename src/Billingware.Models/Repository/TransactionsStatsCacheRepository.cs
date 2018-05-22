@@ -46,19 +46,19 @@ namespace Billingware.Models.Repository
             }
             var item = Cache.Get(key);
 
-            if (value is int i)
+            if (key.Contains("count"))
             {
-                var v = (int)item;
-                v += i;
+                var v = long.Parse(item.ToString());
+                v += long.Parse(value.ToString());
 
                 return Cache.PutAsync(key,
                     v);
             }
-
-            if (value is decimal @decimal)
+          
+            if (key.Contains("sum"))
             {
-                var v = (decimal)item;
-                v += @decimal;
+                var v = decimal.Parse(item.ToString());
+                v += decimal.Parse(value.ToString());
 
                 return Cache.PutAsync(key,
                     v);
@@ -77,19 +77,19 @@ namespace Billingware.Models.Repository
             }
             var item = Cache.Get(key);
 
-            if (value is int i)
+            if (key.Contains("count"))
             {
-                var v = (int)item;
-                v -= i;
+                var v = long.Parse(item.ToString());
+                v -= long.Parse(value.ToString());
 
                 return Cache.PutAsync(key,
                     v);
             }
 
-            if (value is decimal @decimal)
+            if (key.Contains("sum"))
             {
-                var v = (decimal)item;
-                v -= @decimal;
+                var v = decimal.Parse(item.ToString());
+                v -= decimal.Parse(value.ToString());
 
                 return Cache.PutAsync(key,
                     v);
@@ -110,14 +110,14 @@ namespace Billingware.Models.Repository
                     continue;
                 }
 
-                if (item.Value is int)
+                if (item.Key.Contains("count"))
                 {
 
                     Cache.Put(item.Key,
-                        (int)0);
+                        long.Parse("0"));
                 }
 
-                if (item.Value is decimal)
+                if (item.Key.Contains("sum"))
                 {
                     Cache.Put(item.Key,
                         decimal.Zero);

@@ -6,7 +6,7 @@ namespace Billingware.Common.Actors
     {
         public static IActorRef DebitHandlerActor = ActorRefs.Nobody;
         public static IActorRef CreditsHandlerActor = ActorRefs.Nobody;
-        public static IActorRef AccountsHandlerActor = ActorRefs.Nobody;
+        public static IActorRef AccountingActor = ActorRefs.Nobody;
 
     }
 }

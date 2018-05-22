@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Actors\AccountingActor.cs" />
     <Compile Include="Actors\AccountManagerActor.cs" />
+    <Compile Include="Events\PersistTransaction.cs" />
     <Compile Include="Events\DebitAccount.cs" />
     <Compile Include="Helpers\ConditionEvaluatorHelper.cs" />
     <Compile Include="CoreActorSystem.cs" />

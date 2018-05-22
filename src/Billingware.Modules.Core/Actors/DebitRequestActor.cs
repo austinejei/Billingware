@@ -61,66 +61,118 @@ namespace Billingware.Modules.Core.Actors
 
 
             var allTransactionsCount = long.Parse(_tranactionsStatsCache.Find($"count.{request.AccountNumber}").Result.ToString());
-            var debitTransactionSum = long.Parse(_tranactionsStatsCache.Find($"sum.debit.{request.AccountNumber}").Result.ToString());
-            var creditTransactionSum = long.Parse(_tranactionsStatsCache.Find($"sum.credit.{request.AccountNumber}").Result.ToString());
+            var debitTransactionSum = decimal.Parse(_tranactionsStatsCache.Find($"sum.debit.{request.AccountNumber}").Result.ToString());
+            var creditTransactionSum = decimal.Parse(_tranactionsStatsCache.Find($"sum.credit.{request.AccountNumber}").Result.ToString());
             var debitTransactionCount = long.Parse(_tranactionsStatsCache.Find($"count.debit.{request.AccountNumber}").Result.ToString());
             var creditTransactionCount = long.Parse(_tranactionsStatsCache.Find($"count.credit.{request.AccountNumber}").Result.ToString());
 
-            var allConditions = new List<Condition>();
+           // var allConditions = new List<Condition>();
 
             if (specificConditions.Any())
             {
-                allConditions.AddRange(specificConditions);
+                //allConditions.AddRange(specificConditions);
+
+                var perAccountOutcomeList = ConditionEvaluatorHelper.EvaluateConditionAndGetOutcomeIds(account, specificConditions, new ClientPayloadData("debit", request.Reference, request.Amount),
+                    creditTransactionSum, creditTransactionCount, debitTransactionSum, debitTransactionCount,
+                    allTransactionsCount);
+
+
+                if (perAccountOutcomeList.Any())
+                {
+                    //check if there's any "halt" type in the outcome list...then,
+                    //raise an event to actually inspect the outcome of the condition evaluation
+                    //it would also increment the stats cache values
+                    var outcomes = db.Outcomes.AsNoTracking().Where(o => perAccountOutcomeList.Contains(o.Id) && o.Active)
+                        .OrderBy(i => i.Id);
+
+                    if (!outcomes.Any())
+                    {
+                        Sender.Tell(
+                            new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount,account.Balance,account.Balance
+                                , new CommonStatusResponse(message: $"condition was satisfied but no active outcome could be applied.", code: "500", subCode: "500.1")), Self);
+                        return;
+                    }
+
+
+                    if (outcomes.Any(o => o.OutcomeType == OutcomeType.Halt))
+                    {
+                        Sender.Tell(
+                            new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount,account.Balance,
+                                account.Balance, new CommonStatusResponse(message: $"condition was satisfied. but at least one outcome HALTs the process", code: "403", subCode: "403.1")), Self);
+                        return;
+                    }
+
+                    Publish(new DebitAccount(request));
+
+                    Publish(new PersistTransaction(request.AccountNumber, DateTime.Now, request.Narration, request.Amount,
+                        account.Balance, account.Balance - request.Amount, TransactionType.Debit, true, string.Empty, true,
+                        request.ClientId, request.Reference, ticket));
+
+                    Sender.Tell(
+                        new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, account.Balance,
+                            account.Balance - request.Amount, new CommonStatusResponse(message: "Successful")), Self);
+                    return;
+                }
             }
 
             if (generalConditions.Any())
             {
-                allConditions.AddRange(generalConditions);
-            }
+                // allConditions.AddRange(generalConditions);
 
-          
-
-            var outcomeList = ConditionEvaluatorHelper.EvaluateConditionAndGetOutcomeIds(account, allConditions,new ClientPayloadData("debit",request.Reference,request.Amount),
-                creditTransactionSum, creditTransactionCount, debitTransactionSum, debitTransactionCount,
-                allTransactionsCount);
+                var generalOutcomeList = ConditionEvaluatorHelper.EvaluateConditionAndGetOutcomeIds(account, specificConditions, new ClientPayloadData("debit", request.Reference, request.Amount),
+                       creditTransactionSum, creditTransactionCount, debitTransactionSum, debitTransactionCount,
+                       allTransactionsCount);
 
 
-
-            if (outcomeList.Any())
-            {
-                //check if there's any "halt" type in the outcome list...then,
-                //raise an event to actually inspect the outcome of the condition evaluation
-                //it would also increment the stats cache values
-                var outcomes = db.Outcomes.AsNoTracking().Where(o => outcomeList.Contains(o.Id) && o.Active)
-                    .OrderBy(i => i.Id);
-
-                if (!outcomes.Any())
+                if (generalOutcomeList.Any())
                 {
+                    //check if there's any "halt" type in the outcome list...then,
+                    //raise an event to actually inspect the outcome of the condition evaluation
+                    //it would also increment the stats cache values
+                    var outcomes = db.Outcomes.AsNoTracking().Where(o => generalOutcomeList.Contains(o.Id) && o.Active)
+                        .OrderBy(i => i.Id);
+
+                    if (!outcomes.Any())
+                    {
+                        Sender.Tell(
+                            new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, account.Balance,
+                                account.Balance, new CommonStatusResponse(message: $"condition was satisfied but no active outcome could be applied.", code: "500", subCode: "500.1")), Self);
+                        return;
+                    }
+
+
+                    if (outcomes.Any(o => o.OutcomeType == OutcomeType.Halt))
+                    {
+                        Sender.Tell(
+                            new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, account.Balance,
+                                account.Balance, new CommonStatusResponse(message: $"condition was satisfied. but at least one outcome HALTs the process", code: "403", subCode: "403.1")), Self);
+                        return;
+                    }
+
+                    Publish(new DebitAccount(request));
+
+                    Publish(new PersistTransaction(request.AccountNumber, DateTime.Now, request.Narration, request.Amount,
+                        account.Balance, account.Balance - request.Amount, TransactionType.Debit, true, string.Empty, true,
+                        request.ClientId, request.Reference, ticket));
+
                     Sender.Tell(
-                        new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
-                            decimal.Zero, new CommonStatusResponse(message: $"condition was satisfied but no active outcome could be applied.", code: "500", subCode: "500.1")), Self);
+                        new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, account.Balance,
+                            account.Balance - request.Amount, new CommonStatusResponse(message: "Successful")), Self);
                     return;
                 }
-
-
-                if (outcomes.Any(o=>o.OutcomeType==OutcomeType.Halt))
-                {
-                    Sender.Tell(
-                        new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
-                            decimal.Zero, new CommonStatusResponse(message: $"condition was satisfied. but outcome HALTs the process", code: "403", subCode: "403.1")), Self);
-                    return;
-                }
-                
-                Publish(new DebitAccount(request));
-                Sender.Tell(
-                    new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
-                        decimal.Zero, new CommonStatusResponse(message: "Successful")), Self);
-                return;
             }
+
+
+            //if there are no conditions so we still proceed with the intended action
+            Publish(new DebitAccount(request));
+            
+            Publish(new PersistTransaction(request.AccountNumber, DateTime.Now, request.Narration, request.Amount,
+                account.Balance, account.Balance - request.Amount, TransactionType.Debit, false, "no condition", true,
+                request.ClientId, request.Reference, ticket));
 
             Sender.Tell(
-                new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
-                    decimal.Zero, new CommonStatusResponse(message: $"condition was not satisfied.", code: "400", subCode: "404.1")), Self);
+                new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, account.Balance,
+                    account.Balance-request.Amount, new CommonStatusResponse(message: "Successful")), Self);
             return;
         }
     }

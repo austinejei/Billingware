@@ -17,6 +17,7 @@ using Billingware.Common.Caching;
 using Billingware.Common.Di;
 using Billingware.Common.Logging.Ignite;
 using Billingware.Modules.Core.Actors;
+using Billingware.Modules.Core.Events;
 using Xunit;
 
 namespace Billingware.Tests
@@ -59,6 +60,10 @@ namespace Billingware.Tests
             ApiDependencyResolverSystem.Start();
             var resolver = new SimpleInjectorDependencyResolver(ApiDependencyResolverSystem.GetContainer(), Sys);
             _debitActorRef = Sys.ActorOf(Sys.DI().Props<DebitRequestActor>(), nameof(DebitRequestActor));
+            var accountingActorRef = Sys.ActorOf(Sys.DI().Props<AccountingActor>(), nameof(AccountingActor));
+
+            Sys.EventStream.Subscribe(accountingActorRef, typeof(DebitAccount));
+            Sys.EventStream.Subscribe(accountingActorRef, typeof(PersistTransaction));
 
         }
 
@@ -72,7 +77,7 @@ namespace Billingware.Tests
                 "234532", new Dictionary<string, string>().ToImmutableDictionary());
             // Act
             _debitActorRef.Tell(message);
-             var res = ExpectMsg<AccountDebitResponse>(TimeSpan.FromMinutes(2));
+             var res = ExpectMsg<AccountDebitResponse>(TimeSpan.FromMinutes(5));
             // Assert
             Assert.Equal("200", res.StatusResponse.Code);
 
