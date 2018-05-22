@@ -48,6 +48,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -69,16 +70,12 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Transaction.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Billingware.Common.Caching\Billingware.Common.Caching.csproj">
-      <Project>{5794A7AA-1B32-4585-A146-B89D3D2057DC}</Project>
-      <Name>Billingware.Common.Caching</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Billingware.Common.Logging\Billingware.Common.Logging.csproj">
-      <Project>{F6AEAE65-4F16-418E-96DF-530E7B332A89}</Project>
-      <Name>Billingware.Common.Logging</Name>
-    </ProjectReference>
+    <Compile Include="Repository\CacheBase.cs" />
+    <Compile Include="Repository\ITranactionsStatsCacheRepository.cs" />
+    <Compile Include="Repository\TransactionsStatsCacheRepository.cs" />
+    <Compile Include="Repository\TransactionsStatsCacheStoreFactory.cs" />
+    <Compile Include="Repository\TransactionsStatsStoreAdapter.cs" />
+    <Compile Include="Repository\TransactionStat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -88,6 +85,12 @@
     <EmbeddedResource Include="Migrations\201805192324509_Initial.resx">
       <DependentUpon>201805192324509_Initial.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Billingware.Common.Logging.Ignite\Billingware.Common.Logging.Ignite.csproj">
+      <Project>{7B470A61-D290-437C-8CDC-892EBF3235BC}</Project>
+      <Name>Billingware.Common.Logging.Ignite</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

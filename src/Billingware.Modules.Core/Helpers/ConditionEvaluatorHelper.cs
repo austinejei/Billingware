@@ -6,7 +6,7 @@ using Billingware.Models.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Billingware.Modules.Core.Actors
+namespace Billingware.Modules.Core.Helpers
 {
     public class ConditionEvaluatorHelper
     {
@@ -354,7 +354,7 @@ namespace Billingware.Modules.Core.Actors
             string keyExpression)
         {
 
-            //e.g. keyExpression can be $.Extra.active or $.Balance or $.Extra.allowOverdraft, etc
+            //e.g. keyExpression can be $.Extra.active or $.Balance or $.Payload.Amount, etc
             JObject extraJson = null;
             if (!string.IsNullOrEmpty(account.Extra))
             {

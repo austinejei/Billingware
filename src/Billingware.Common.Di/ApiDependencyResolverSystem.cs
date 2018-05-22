@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Billingware.Common.Caching;
+using Billingware.Models.Repository;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
@@ -23,6 +25,8 @@ namespace Billingware.Common.Di
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
 
+            _container.Register<ITranactionsStatsCacheRepository>(() =>
+                new TransactionsStatsCacheRepository(CommonIgniterService.TransactionsStatsCache));
 
             _container.Verify(VerificationOption.VerifyOnly);
 

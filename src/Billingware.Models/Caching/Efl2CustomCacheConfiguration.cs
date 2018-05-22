@@ -6,7 +6,8 @@ using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Multicast;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
 using Apache.Ignite.EntityFramework;
-using Billingware.Common.Caching;
+using Billingware.Common.Logging.Ignite;
+
 
 namespace Billingware.Models.Caching
 {
@@ -20,10 +21,10 @@ namespace Billingware.Models.Caching
                     IgniteInstanceName = $"{typeof(BillingwareDataContext).FullName}.{typeof(BillingwareDataContext).Name}." + Guid.NewGuid().ToString("N"),
                     Logger = new CustomIgniteSerilogLogger(),
                     ClientMode = false,
-                    ConsistentId = Guid.NewGuid().ToString("N"),
+                //    ConsistentId = Guid.NewGuid().ToString("N"),
                     WorkDirectory = AppDomain.CurrentDomain.BaseDirectory,
                     MetricsLogFrequency = TimeSpan.Zero,
-                    MetricsUpdateFrequency = TimeSpan.Zero,
+                  //  MetricsUpdateFrequency = TimeSpan.Zero,
                     Localhost = "0.0.0.0",
                     DiscoverySpi = new TcpDiscoverySpi
                     {
@@ -34,12 +35,12 @@ namespace Billingware.Models.Caching
                                 "localhost"
                             }
                         },
-                        LocalPort = 68500,
+                        LocalPort = 58500,
                         LocalPortRange = 10,
                     },
                     CommunicationSpi = new TcpCommunicationSpi
                     {
-                        LocalPort = 68100
+                        LocalPort = 58100
                     }
 
                 }),

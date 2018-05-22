@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Apache.Ignite, Version=2.4.0.27085, Culture=neutral, PublicKeyToken=6e15f083b9518446, processorArchitecture=MSIL">
+      <HintPath>..\packages\Apache.Ignite.2.4.0\lib\net40\Apache.Ignite.exe</HintPath>
+    </Reference>
+    <Reference Include="Apache.Ignite.Core, Version=2.4.0.27085, Culture=neutral, PublicKeyToken=a487a7ff0b2aaa4a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Apache.Ignite.2.4.0\lib\net40\Apache.Ignite.Core.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleInjector, Version=4.3.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.4.3.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
@@ -49,5 +55,20 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Billingware.Common.Caching\Billingware.Common.Caching.csproj">
+      <Project>{5794A7AA-1B32-4585-A146-B89D3D2057DC}</Project>
+      <Name>Billingware.Common.Caching</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Billingware.Models\Billingware.Models.csproj">
+      <Project>{9F4EFA88-CF74-445D-A9EA-42DA7B4CE0E1}</Project>
+      <Name>Billingware.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)libs" md "$(TargetDir)libs"
+xcopy /s /y "$(SolutionDir)packages\Apache.Ignite.2.4.0\libs\*.*" "$(TargetDir)libs"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

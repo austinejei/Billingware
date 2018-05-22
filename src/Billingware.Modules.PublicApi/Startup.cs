@@ -59,7 +59,7 @@ namespace Billingware.Modules.PublicApi
             config.EnsureInitialized();
             ApiDependencyResolverSystem.Start();
             config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(ApiDependencyResolverSystem.GetContainer());
-            //todo: start remote client core actor system
+            
             var cors = new EnableCorsAttribute("*",
                 "*",
                 "*");
@@ -96,7 +96,7 @@ namespace Billingware.Modules.PublicApi
                     c.IgnoreObsoleteActions();
                     c.SingleApiVersion("v1",
                             "Billingware API Documentation").Description("API schema for interacting Billingware")
-                        .TermsOfService("").License(builder => builder.Url("https://www.atlaas.com"));
+                        .TermsOfService("").License(builder => builder.Url("https://github.com/austinejei/Billingware"));
                 }).EnableSwaggerUi("api/ui/{*assetPath}",
                 s =>
                 {

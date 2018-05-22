@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5794A7AA-1B32-4585-A146-B89D3D2057DC}</ProjectGuid>
+    <ProjectGuid>{E10EE5F9-DC5C-4A08-B73D-C8627049401A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Billingware.Common.Caching</RootNamespace>
-    <AssemblyName>Billingware.Common.Caching</AssemblyName>
+    <RootNamespace>Billingware.Modules.Caching</RootNamespace>
+    <AssemblyName>Billingware.Modules.Caching</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin-debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -36,14 +36,7 @@
     <Reference Include="Apache.Ignite.Core, Version=2.4.0.27085, Culture=neutral, PublicKeyToken=a487a7ff0b2aaa4a, processorArchitecture=MSIL">
       <HintPath>..\packages\Apache.Ignite.2.4.0\lib\net40\Apache.Ignite.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.2.7.1\lib\net46\Serilog.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Settings.AppSettings, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.Settings.AppSettings.2.1.2\lib\net45\Serilog.Settings.AppSettings.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,17 +46,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonIgniterService.cs" />
+    <Compile Include="SimpleCacheModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Billingware.Common.Caching\Billingware.Common.Caching.csproj">
+      <Project>{5794A7AA-1B32-4585-A146-B89D3D2057DC}</Project>
+      <Name>Billingware.Common.Caching</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Billingware.Common.Logging.Ignite\Billingware.Common.Logging.Ignite.csproj">
+      <Project>{7B470A61-D290-437C-8CDC-892EBF3235BC}</Project>
+      <Name>Billingware.Common.Logging.Ignite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Billingware.Modules.Common\Billingware.Modules.Common.csproj">
+      <Project>{DEB30458-802A-4A4D-AB50-6D00600E6AA0}</Project>
+      <Name>Billingware.Modules.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Billingware.Models\Billingware.Models.csproj">
-      <Project>{9F4EFA88-CF74-445D-A9EA-42DA7B4CE0E1}</Project>
-      <Name>Billingware.Models</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Apache.Ignite.Core.Log;
 using Serilog;
 using Serilog.Core;
 using ILogger = Apache.Ignite.Core.Log.ILogger;
 
-namespace Billingware.Common.Caching
+
+namespace Billingware.Common.Logging.Ignite
 {
-    public class CustomIgniteSerilogLogger : ILogger
+    public class CustomIgniteSerilogLogger :ILogger
     {
-        protected static readonly Logger Logger = new LoggerConfiguration().ReadFrom.AppSettings().CreateLogger();
-        public void Log(LogLevel level,
-            string message,
-            object[] args,
-            IFormatProvider formatProvider,
-            string category,
-            string nativeErrorInfo,
-            Exception ex)
+      protected static readonly Logger Logger = new LoggerConfiguration().ReadFrom.AppSettings().CreateLogger();
+
+        public bool IsEnabled(LogLevel level) { return true; }
+
+        public void Log(LogLevel level, string message, object[] args, IFormatProvider formatProvider, string category,
+            string nativeErrorInfo, Exception ex)
         {
             switch (level)
             {
@@ -44,7 +39,5 @@ namespace Billingware.Common.Caching
                         null);
             }
         }
-
-        public bool IsEnabled(LogLevel level) { return true; }
     }
 }

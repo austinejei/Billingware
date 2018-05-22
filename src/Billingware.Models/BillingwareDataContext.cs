@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Billingware.Common.Logging;
 using Billingware.Models.Caching;
 using Billingware.Models.Core;
 

@@ -5,13 +5,18 @@ using Billingware.Common.Actors;
 using Billingware.Common.Actors.Messages;
 using Billingware.Models;
 using Billingware.Models.Core;
+using Billingware.Models.Repository;
+using Billingware.Modules.Core.Helpers;
 
 namespace Billingware.Modules.Core.Actors
 {
     public class DebitHandlerActor:BaseActor
     {
-        public DebitHandlerActor()
+        private readonly ITranactionsStatsCacheRepository _tranactionsStatsCache;
+
+        public DebitHandlerActor(ITranactionsStatsCacheRepository tranactionsStatsCache)
         {
+            _tranactionsStatsCache = tranactionsStatsCache;
             Receive<RequestAccountDebit>(x => DoRequestAccountDebit(x));
         }
 
@@ -69,13 +74,11 @@ namespace Billingware.Modules.Core.Actors
              * 1. check cache, if not, then create entry
              * 2. if in cache, just load it up
              */
-            var allTransactionsCount =
-                db.Transactions.AsNoTracking().LongCount(t => t.AccountNumber == request.AccountNumber);
-            var debitTransactionSum= db.Transactions.AsNoTracking().Where(t => t.AccountNumber == request.AccountNumber && t.TransactionType== TransactionType.Debit).Select(s=>s.Amount).DefaultIfEmpty(0).Sum();
-            var creditTransactionSum = db.Transactions.AsNoTracking().Where(t => t.AccountNumber == request.AccountNumber && t.TransactionType == TransactionType.Credit).Select(s => s.Amount).DefaultIfEmpty(0).Sum();
-
-            var debitTransactionCount = db.Transactions.AsNoTracking().LongCount(t => t.AccountNumber == request.AccountNumber && t.TransactionType == TransactionType.Debit);
-            var creditTransactionCount = db.Transactions.AsNoTracking().LongCount(t => t.AccountNumber == request.AccountNumber && t.TransactionType == TransactionType.Debit);
+            var allTransactionsCount = (long)_tranactionsStatsCache.Find($"count.{request.AccountNumber}").Result;
+            var debitTransactionSum = (long) _tranactionsStatsCache.Find($"sum.debit.{request.AccountNumber}").Result;
+            var creditTransactionSum = (long)_tranactionsStatsCache.Find($"sum.credit.{request.AccountNumber}").Result;
+            var debitTransactionCount = (long)_tranactionsStatsCache.Find($"count.debit.{request.AccountNumber}").Result;
+            var creditTransactionCount = (long)_tranactionsStatsCache.Find($"count.credit.{request.AccountNumber}").Result;
 
 
             var outcomeList = ConditionEvaluatorHelper.EvaluateConditionAndGetOutcomeIds(account, allConditions,new ClientPayloadData("debit",request.Reference,request.Amount),
@@ -88,6 +91,7 @@ namespace Billingware.Modules.Core.Actors
             {
                 //todo: check if there's any "halt" type in the outcome list...then,
                 //raise an event to actually inspect the outcome of the condition evaluation
+                //it would also increment the stats cache values
 
                 Sender.Tell(
                     new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
