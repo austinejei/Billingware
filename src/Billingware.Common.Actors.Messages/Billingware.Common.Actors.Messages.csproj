@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountDebitResponse.cs" />
+    <Compile Include="CommonStatusResponse.cs" />
     <Compile Include="RequestAccountDebit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

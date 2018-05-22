@@ -28,40 +28,4 @@ namespace Billingware.Common.Actors.Messages
             Extras = extras;
         }
     }
-
-    public struct AccountDebitResponse
-    {
-        public string Reference { get; }
-        public string AccountNumber { get; }
-        public string Ticket { get; }
-        public decimal Amount { get; }
-        public decimal BalanceBefore { get; }
-        public decimal BalanceAfter { get; }
-        public CommonStatusResponse StatusResponse { get; }
-
-        public AccountDebitResponse(string reference,string accountNumber,string ticket,decimal amount,decimal balanceBefore,decimal balanceAfter,CommonStatusResponse statusResponse)
-        {
-            Reference = reference;
-            AccountNumber = accountNumber;
-            Ticket = ticket;
-            Amount = amount;
-            BalanceBefore = balanceBefore;
-            BalanceAfter = balanceAfter;
-            StatusResponse = statusResponse;
-        }
-    }
-
-    public class CommonStatusResponse
-    {
-        public string Code { get; }
-        public string SubCode { get; }
-        public string Message { get; }
-
-        public CommonStatusResponse(string code="200",string subCode="200.1",string message="")
-        {
-            Code = code;
-            SubCode = subCode;
-            Message = message;
-        }
-    }
 }
