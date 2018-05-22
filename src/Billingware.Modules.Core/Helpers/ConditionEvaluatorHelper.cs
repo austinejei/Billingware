@@ -99,14 +99,13 @@ namespace Billingware.Modules.Core.Helpers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                //ConstantExpression key = Expression.Constant(activityConditionKey);
-
-                //Expression leftExpression = Expression.Property(cachedCopy,"Item",key);
+   
                 Expression leftExpression = Expression.Constant(activityConditionKey,
                     activityConditionKey.GetType());
 
-                //leftExpression = Expression.Convert(leftExpression,activityConditionComparatorValue.Value.GetType());
-                
+                var convertedValueType = Convert.ChangeType(condition.Value, activityConditionKey.GetType());
+                var rightConstant = Expression.Constant(convertedValueType, activityConditionKey.GetType());
+               
                 switch (condition.Type)
                 {
                     case ComparatorType.EqualTo:
@@ -114,8 +113,8 @@ namespace Billingware.Modules.Core.Helpers
 
                         Expression eqleft = leftExpression;
 
-                        Expression eqright = Expression.Constant(condition.Value,
-                            condition.Value.GetType());
+                        //Expression eqright = Expression.Constant(condition.Value,condition.Value.GetType());
+                        Expression eqright = rightConstant;
 
                         Expression eqResult = Expression.Equal(eqleft,
                             eqright);
@@ -157,8 +156,8 @@ namespace Billingware.Modules.Core.Helpers
 
                         //Expression gtleft = Expression.PropertyOrField(cachedCopy, whereClauseItem.Field);
                         Expression gtleft = leftExpression;
-                        Expression gtright = Expression.Constant(condition.Value,
-                            condition.Value.GetType());
+                        //Expression gtright = Expression.Constant(condition.Value,condition.Value.GetType());
+                        Expression gtright = rightConstant;
                         Expression gtresult = Expression.GreaterThan(gtleft,
                             gtright);
 
@@ -200,8 +199,8 @@ namespace Billingware.Modules.Core.Helpers
 
                         //Expression ltleft = Expression.PropertyOrField(cachedCopy, whereClauseItem.Field);
                         Expression ltleft = leftExpression;
-                        Expression ltright = Expression.Constant(condition.Value,
-                            condition.Value.GetType());
+                        //Expression ltright = Expression.Constant(condition.Value,condition.Value.GetType());
+                        Expression ltright = rightConstant;
                         Expression ltresult = Expression.LessThan(ltleft,
                             ltright);
 
@@ -241,8 +240,8 @@ namespace Billingware.Modules.Core.Helpers
                     case ComparatorType.GreaterThanOrEqualTo:
                         //Expression gtoreqleft = Expression.PropertyOrField(cachedCopy, whereClauseItem.Field);
                         Expression gtoreqleft = leftExpression;
-                        Expression gtoreqright = Expression.Constant(condition.Value,
-                            condition.Value.GetType());
+                        //Expression gtoreqright = Expression.Constant(condition.Value,condition.Value.GetType());
+                        Expression gtoreqright = rightConstant;
                         Expression gtoreqresult = Expression.LessThanOrEqual(gtoreqleft,
                             gtoreqright);
 
@@ -284,8 +283,8 @@ namespace Billingware.Modules.Core.Helpers
 
                         // Expression ltoreqleft = Expression.PropertyOrField(cachedCopy, whereClauseItem.Field);
                         Expression ltoreqleft = leftExpression;
-                        Expression ltoreqright = Expression.Constant(condition.Value,
-                            condition.Value.GetType());
+                        //Expression ltoreqright = Expression.Constant(condition.Value,condition.Value.GetType());
+                        Expression ltoreqright = rightConstant;
                         Expression ltoreqresult = Expression.LessThanOrEqual(ltoreqleft,
                             ltoreqright);
 
@@ -355,6 +354,7 @@ namespace Billingware.Modules.Core.Helpers
         {
 
             //e.g. keyExpression can be $.Extra.active or $.Balance or $.Payload.Amount, etc
+            //see https://www.newtonsoft.com/json/help/html/QueryJsonSelectTokenJsonPath.htm
             JObject extraJson = null;
             if (!string.IsNullOrEmpty(account.Extra))
             {

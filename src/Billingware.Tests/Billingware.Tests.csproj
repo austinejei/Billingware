@@ -48,6 +48,12 @@
     <Reference Include="Akka.TestKit.Xunit2, Version=1.3.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Akka.TestKit.Xunit2.1.3.7\lib\net45\Akka.TestKit.Xunit2.dll</HintPath>
     </Reference>
+    <Reference Include="Apache.Ignite, Version=2.4.0.27085, Culture=neutral, PublicKeyToken=6e15f083b9518446, processorArchitecture=MSIL">
+      <HintPath>..\packages\Apache.Ignite.2.4.0\lib\net40\Apache.Ignite.exe</HintPath>
+    </Reference>
+    <Reference Include="Apache.Ignite.Core, Version=2.4.0.27085, Culture=neutral, PublicKeyToken=a487a7ff0b2aaa4a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Apache.Ignite.2.4.0\lib\net40\Apache.Ignite.Core.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -96,6 +102,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountManagerActorShould.cs" />
+    <Compile Include="ConditionTests.cs" />
     <Compile Include="DebitHandlerActorShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -112,9 +120,21 @@
       <Project>{12589D01-A764-4E74-9762-2C038DBE4193}</Project>
       <Name>Billingware.Common.Actors</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Billingware.Common.Caching\Billingware.Common.Caching.csproj">
+      <Project>{5794A7AA-1B32-4585-A146-B89D3D2057DC}</Project>
+      <Name>Billingware.Common.Caching</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Billingware.Common.Di\Billingware.Common.Di.csproj">
       <Project>{8D662B5C-6E1C-46CF-80AF-976DF590EA23}</Project>
       <Name>Billingware.Common.Di</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Billingware.Common.Logging.Ignite\Billingware.Common.Logging.Ignite.csproj">
+      <Project>{7B470A61-D290-437C-8CDC-892EBF3235BC}</Project>
+      <Name>Billingware.Common.Logging.Ignite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Billingware.Models\Billingware.Models.csproj">
+      <Project>{9F4EFA88-CF74-445D-A9EA-42DA7B4CE0E1}</Project>
+      <Name>Billingware.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Billingware.Modules.Core\Billingware.Modules.Core.csproj">
       <Project>{5600D016-3179-4B01-AD10-553F75FE0A7A}</Project>
@@ -133,4 +153,9 @@
     <Error Condition="!Exists('..\packages\xunit.core.2.3.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.3.1\build\xunit.core.targets'))" />
   </Target>
   <Import Project="..\packages\xunit.core.2.3.1\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.3.1\build\xunit.core.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)libs" md "$(TargetDir)libs"
+xcopy /s /y "$(SolutionDir)packages\Apache.Ignite.2.4.0\libs\*.*" "$(TargetDir)libs"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

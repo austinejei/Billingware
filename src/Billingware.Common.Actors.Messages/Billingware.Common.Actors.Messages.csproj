@@ -43,8 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountCreated.cs" />
     <Compile Include="AccountDebitResponse.cs" />
+    <Compile Include="AccountEdited.cs" />
     <Compile Include="CommonStatusResponse.cs" />
+    <Compile Include="CreateAccount.cs" />
+    <Compile Include="EditAccount.cs" />
     <Compile Include="RequestAccountDebit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

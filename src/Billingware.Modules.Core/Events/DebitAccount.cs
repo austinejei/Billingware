@@ -2,11 +2,11 @@
 
 namespace Billingware.Modules.Core.Events
 {
-    public struct DebitAccountEvent
+    public struct DebitAccount
     {
         public RequestAccountDebit Request { get; }
 
-        public DebitAccountEvent(RequestAccountDebit request)
+        public DebitAccount(RequestAccountDebit request)
         {
             Request = request;
         }

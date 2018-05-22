@@ -10,10 +10,10 @@ namespace Billingware.Modules.Core.Actors
     {
         public AccountingActor()
         {
-            Receive<DebitAccountEvent>(x => DoDebitAccountEvent(x));
+            Receive<DebitAccount>(x => DoDebitAccountEvent(x));
         }
 
-        private void DoDebitAccountEvent(DebitAccountEvent detail)
+        private void DoDebitAccountEvent(DebitAccount detail)
         {
             using (var db = new BillingwareDataContext())
             {
@@ -21,13 +21,10 @@ namespace Billingware.Modules.Core.Actors
 
                 if (account==null)
                 {
-                    //todo: do we retry??
                     return;
                 }
 
-                var balanceBefore = account.Balance;
                 account.Balance -= detail.Request.Amount;
-                var balanceAfter = account.Balance;
 
                 db.Entry(account).State = EntityState.Modified;
                 db.SaveChanges();
