@@ -54,10 +54,10 @@ namespace Billingware.Modules.Core
 
 
             TopLevelActors.DebitHandlerActor = _actorSystem.ActorOf(_actorSystem.DI()
-                    .Props<DebitHandlerActor>()
+                    .Props<DebitRequestActor>()
                     .WithSupervisorStrategy(GetDefaultSupervisorStrategy)
                     .WithRouter(FromConfig.Instance),
-                nameof(DebitHandlerActor));
+                nameof(DebitRequestActor));
         }
 
         /// <summary>

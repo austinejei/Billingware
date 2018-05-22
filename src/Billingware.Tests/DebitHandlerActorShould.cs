@@ -24,7 +24,7 @@ namespace Billingware.Tests
         {
             ApiDependencyResolverSystem.Start();
             var resolver = new SimpleInjectorDependencyResolver(ApiDependencyResolverSystem.GetContainer(), Sys);
-            _debitActorRef = Sys.ActorOf(Sys.DI().Props<DebitHandlerActor>(), nameof(DebitHandlerActor));
+            _debitActorRef = Sys.ActorOf(Sys.DI().Props<DebitRequestActor>(), nameof(DebitRequestActor));
 
         }
 

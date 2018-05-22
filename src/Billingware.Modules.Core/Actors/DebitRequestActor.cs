@@ -6,15 +6,16 @@ using Billingware.Common.Actors.Messages;
 using Billingware.Models;
 using Billingware.Models.Core;
 using Billingware.Models.Repository;
+using Billingware.Modules.Core.Events;
 using Billingware.Modules.Core.Helpers;
 
 namespace Billingware.Modules.Core.Actors
 {
-    public class DebitHandlerActor:BaseActor
+    public class DebitRequestActor:BaseActor
     {
         private readonly ITranactionsStatsCacheRepository _tranactionsStatsCache;
 
-        public DebitHandlerActor(ITranactionsStatsCacheRepository tranactionsStatsCache)
+        public DebitRequestActor(ITranactionsStatsCacheRepository tranactionsStatsCache)
         {
             _tranactionsStatsCache = tranactionsStatsCache;
             Receive<RequestAccountDebit>(x => DoRequestAccountDebit(x));
@@ -67,8 +68,7 @@ namespace Billingware.Modules.Core.Actors
                 allConditions.AddRange(specificConditions);
             }
 
-            //todo: spin off an ignite cache to hold these values... :)
-
+            
             /***
              * how?
              * 1. check cache, if not, then create entry
@@ -92,7 +92,27 @@ namespace Billingware.Modules.Core.Actors
                 //todo: check if there's any "halt" type in the outcome list...then,
                 //raise an event to actually inspect the outcome of the condition evaluation
                 //it would also increment the stats cache values
+                var outcomes = db.Outcomes.AsNoTracking().Where(o => outcomeList.Contains(o.Id) && o.Active)
+                    .OrderBy(i => i.Id);
 
+                if (!outcomes.Any())
+                {
+                    Sender.Tell(
+                        new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
+                            decimal.Zero, new CommonStatusResponse(message: $"condition was satisfied but no active outcome could be applied.", code: "500", subCode: "500.1")), Self);
+                    return;
+                }
+
+
+                if (outcomes.Any(o=>o.OutcomeType==OutcomeType.Halt))
+                {
+                    Sender.Tell(
+                        new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
+                            decimal.Zero, new CommonStatusResponse(message: $"condition was satisfied. but outcome HALTs the process", code: "403", subCode: "403.1")), Self);
+                    return;
+                }
+                
+                Publish(new DebitAccountEvent(request));
                 Sender.Tell(
                     new AccountDebitResponse(request.Reference, request.AccountNumber, ticket, request.Amount, decimal.Zero,
                         decimal.Zero, new CommonStatusResponse(message: "Successful")), Self);

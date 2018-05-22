@@ -66,10 +66,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\AccountingActor.cs" />
+    <Compile Include="Events\DebitAccountEvent.cs" />
     <Compile Include="Helpers\ConditionEvaluatorHelper.cs" />
     <Compile Include="CoreActorSystem.cs" />
     <Compile Include="CoreModule.cs" />
-    <Compile Include="Actors\DebitHandlerActor.cs" />
+    <Compile Include="Actors\DebitRequestActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
