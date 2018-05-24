@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="AccountManagerActorShould.cs" />
     <Compile Include="ConditionTests.cs" />
+    <Compile Include="CreditHandlerActorShould.cs" />
     <Compile Include="DebitHandlerActorShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

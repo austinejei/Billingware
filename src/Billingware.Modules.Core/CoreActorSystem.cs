@@ -60,6 +60,12 @@ namespace Billingware.Modules.Core
                     .WithRouter(FromConfig.Instance),
                 nameof(DebitRequestActor));
 
+            TopLevelActors.CreditsHandlerActor = _actorSystem.ActorOf(_actorSystem.DI()
+                    .Props<CreditRequestActor>()
+                    .WithSupervisorStrategy(GetDefaultSupervisorStrategy)
+                    .WithRouter(FromConfig.Instance),
+                nameof(CreditRequestActor));
+
             TopLevelActors.AccountingActor = _actorSystem.ActorOf(_actorSystem.DI()
                     .Props<AccountingActor>()
                     .WithSupervisorStrategy(GetDefaultSupervisorStrategy)
@@ -69,6 +75,7 @@ namespace Billingware.Modules.Core
 
 
             _actorSystem.EventStream.Subscribe(TopLevelActors.AccountingActor, typeof(DebitAccount));
+            _actorSystem.EventStream.Subscribe(TopLevelActors.AccountingActor, typeof(CreditAccount));
             _actorSystem.EventStream.Subscribe(TopLevelActors.AccountingActor, typeof(PersistTransaction));
         }
 

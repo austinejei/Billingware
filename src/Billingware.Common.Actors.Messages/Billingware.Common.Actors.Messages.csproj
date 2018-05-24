@@ -49,6 +49,7 @@
     <Compile Include="CommonStatusResponse.cs" />
     <Compile Include="CreateAccount.cs" />
     <Compile Include="EditAccount.cs" />
+    <Compile Include="RequestAccountCredit.cs" />
     <Compile Include="RequestAccountDebit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
